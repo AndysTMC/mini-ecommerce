@@ -84,7 +84,7 @@ const update_product = async (req, res) => {
 
 
 const delete_product = async (req, res) => {
-    let p_id = req.body.p_id
+    let p_id = req.query.p_id
     try {
         const deletedProduct = await Product.deleteOne({p_id})
         if(deletedProduct.deletedCount != 0) {
