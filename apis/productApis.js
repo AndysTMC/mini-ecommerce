@@ -81,6 +81,8 @@ const update_product = async (req, res) => {
         console.log("Log: Error occured in data updation")
     }
 };
+
+
 const delete_product = async (req, res) => {
     let p_id = req.body.p_id
     try {
