@@ -1,4 +1,5 @@
-const token = require('./token')
+
+const jwt = require('jwt-simple')
 
 const User = require('../model/User')
 
@@ -13,7 +14,7 @@ const loginUser = async (req, res) => {
             })
             console.log("Log: User not found")
         } else {
-            let jwt_token = token({ u_name, u_pwd }, new Date().toString())
+            let jwt_token = jwt.encode({ u_name, u_pwd }, new Date().toString())
             res.json({
                 'login' : 'success',
                 'token': jwt_token
@@ -57,7 +58,7 @@ const AuthenticateUser = async (req, res) => {
         })
     } else {
         try {
-            const verified = jwt.verify(token, new Date().toString())
+            const verified = jwt.decode(token, new Date().toString())
             req.user = verified
             res.send({
                 'auth': 'success',

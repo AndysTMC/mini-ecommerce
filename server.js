@@ -3,7 +3,7 @@ const express = require('express')
 const bodyparser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken');
+const jwt = require('jwt-simple');
 
 //import url
 let url = require('./url')
@@ -37,7 +37,7 @@ const jwtVerifyMiddleware = (req, res, next) => {
       return res.status(401).send('Access denied. No token provided.');
     }
     try {
-      const decoded = jwt.verify(token, new Date().toString());
+      const decoded = jwt.decode(token, new Date().toString());
       req.user = decoded;
       next();
     } catch (ex) {
