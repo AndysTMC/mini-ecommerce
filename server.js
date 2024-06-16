@@ -3,20 +3,21 @@ const express = require('express')
 const bodyparser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken');
 
 //import url
 let url = require('./url')
 
-//create rest object
+// Create rest object
 let app = express()
-//set JSON as MIME type
+// Set JSON as MIME type
 app.use(bodyparser.json())
-//client is not sending form data -> encoding JSON
+// Client is not sending form data -> encoding JSON
 app.use(bodyparser.urlencoded({ extended: false }))
-//enable CORS -> Cross Origine Resource Sharing -> communication among various ports
+// Enable CORS -> Cross Origine Resource Sharing -> communication among various ports
 app.use(cors())
 
-//connect to mongodb
+// Connect to mongodb
 mongoose.connect(url, { dbName: "MiniProject" })
     .then(() => {
         console.log('Connection Success')
@@ -24,17 +25,35 @@ mongoose.connect(url, { dbName: "MiniProject" })
         console.log("Connection failure", errRes)
     })
 
-//import routes
+// Import routes
 const productRoutes = require('./routes/productRoutes')
 const userRoutes = require('./routes/userRoutes')
 const cartRoutes = require('./routes/cartRoutes')
-//use routes
+
+// JWT middleware
+const jwtVerifyMiddleware = (req, res, next) => {
+    const token = req.header('Authorization')
+    if (!token) {
+      return res.status(401).send('Access denied. No token provided.');
+    }
+    try {
+      const decoded = jwt.verify(token, new Date().toString());
+      req.user = decoded;
+      next();
+    } catch (ex) {
+      res.status(400).send('Invalid token.');
+    }
+  };
+
+// Use routes
 app.use("/product", productRoutes)
 app.use("/user", userRoutes)
-app.use("/cart", cartRoutes)
-//create port
+app.use("/cart", jwtVerifyMiddleware, cartRoutes)
+
+// Create port
 let port = 8080
-//assign port no
+
+// Assign port to server
 app.listen(port, () => {
     console.log('Server listening port no:- ', port)
 })

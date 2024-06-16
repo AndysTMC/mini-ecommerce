@@ -44,7 +44,7 @@ const registerUser = async (req, res) => {
         console.log("Log: User registered")
     }
     catch (error) {
-        res.status(400).send({ 'register': 'success', "error": error})
+        res.status(400).send({ 'register': 'error', "error": error})
         console.log("Log: Error occured in data insertion")
     }
 }
