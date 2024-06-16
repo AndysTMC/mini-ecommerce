@@ -9,18 +9,20 @@ const loginUser = async (req, res) => {
         const user = await User.find({u_name, u_pwd})
         if (user.length === 0) {
             res.json({
-                'auth': 'failure'
+                'login': 'failure'
             })
             console.log("Log: User not found")
+        } else {
+            let jwt_token = token({ u_name, u_pwd }, new Date().toString())
+            res.json({
+                'login' : 'success',
+                'token': jwt_token
+            })
+            console.log("Log: User found")
         }
-        let jwt_token = token({ u_name, u_pwd }, new Date().toString())
-        res.json({
-            'auth' : 'success',
-            'token': jwt_token
-        })
-        console.log("Log: User found")
+        
     } catch(error) {
-        res.json({ 'error': 'Error occured in data fetching' })
+        res.json({ 'login': 'error', 'error': error })
         console.log("Log: Error occured in data fetching")
     }
 }
@@ -36,15 +38,39 @@ const registerUser = async (req, res) => {
     try {
         const savedUser = await user.save()
         res.send({
-            'registration': 'success',
+            'register': 'success',
             'user': savedUser
         })
         console.log("Log: User registered")
     }
     catch (error) {
-        res.status(400).send({"error": "Error occured in data insertion"})
+        res.status(400).send({ 'register': 'success', "error": error})
         console.log("Log: Error occured in data insertion")
     }
 }
 
-module.exports = { loginUser, registerUser }
+const AuthenticateUser = async (req, res) => {
+    const token = req.header('Authorization')
+    if (!token) {
+        res.send({
+            'auth': 'failure'
+        })
+    } else {
+        try {
+            const verified = jwt.verify(token, new Date().toString())
+            req.user = verified
+            res.send({
+                'auth': 'success',
+                'user': verified
+            })
+        } catch (error) {
+            res.send({
+                'auth': 'error',
+                'error': error
+            })
+        }
+    }
+    
+}
+
+module.exports = { loginUser, registerUser, AuthenticateUser }

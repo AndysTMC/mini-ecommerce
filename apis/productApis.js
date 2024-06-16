@@ -11,7 +11,7 @@ const fetch_product = async (req, res) => {
         })
         console.log("Log: Product fetched")
     } catch(error) {
-        res.json({ 'error': 'Error occured in data fetching' })
+        res.json({ 'fetch': 'error', 'error': error })
         console.log("Log: Error occured in data fetching")
     }
 }
@@ -25,7 +25,7 @@ const fetch_all_products = async (req, res) => {
         })
         console.log("Log: All products fetched")
     } catch(error) {
-        res.json({ 'error': 'Error occured in data fetching' })
+        res.json({ 'fetch_all': 'error', 'error': error })
         console.log("Log: Error occured in data fetching")
     }
 }
@@ -48,7 +48,7 @@ const insert_product = async (req, res) => {
         console.log("Log: Product inserted")
     }
     catch (error) {
-        res.status(400).send({"error": "Error occured in data insertion"})
+        res.status(400).send({"insert": "error", "error": error})
         console.log("Log: Error occured in data insertion")
     }
 }
@@ -77,7 +77,10 @@ const update_product = async (req, res) => {
             console.log("Log: Product not updated")
         }
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({
+            'update': 'error',
+            'error': error
+        })
         console.log("Log: Error occured in data updation")
     }
 };
@@ -95,7 +98,7 @@ const delete_product = async (req, res) => {
             console.log("Log: Product not deleted")
         }
     } catch(error) {
-        res.status(400).send({"error": "Error occured in data deletion"})
+        res.status(400).send({"delete": "error", "error": error})
         console.log("Log: Error occured in data deletion")
     }
 }
