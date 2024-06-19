@@ -1,11 +1,12 @@
 //import db schema
 const Cart = require('../model/Cart')
+const Product = require('../model/Product')
 
 
 const fetch_cart = async (req, res) => {
-    const u_name = req.body.u_name
+    const u_name = req.u_name
     try {
-        const cart = await Cart.find({u_name})
+        const cart = await Cart.find({u_name: u_name})
         res.json({
             'fetch' : 'success',
             'cart' : cart
@@ -18,19 +19,18 @@ const fetch_cart = async (req, res) => {
 }
 
 const insert_to_cart = async (req, res) => {
+    console.log("Log: Inserting product to cart")
     const reference = {
-        u_name: req.body.u_name,
+        u_name: req.u_name,
         p_id: req.body.p_id,
     }
-    const data = {
-        p_img: req.body.p_img,
-        p_cost: req.body.p_cost
-    }
-    const cart = await Cart.find(reference)
-    if (cart.length == 0) {
+    const product = await Product.findOne({p_id: reference.p_id})
+    const cart = await Cart.findOne(reference)
+    if (!cart && product) {
         const cartProduct = new Cart({
             ...reference,
-            ...data,
+            p_img: product.p_img,
+            p_cost: product.p_cost,
             p_qty: 1
         })
         try {
@@ -53,19 +53,18 @@ const insert_to_cart = async (req, res) => {
 
 }
 
-const update_to_cart = async (req, res) => {
+const update_cart = async (req, res) => {
     const reference = {
-        u_name: req.body.u_name,
+        u_name: req.u_name,
         p_id: req.body.p_id,
     }
-    const cart = await Cart.find(reference)
-    if (cart.length > 0) {
-        const updatedCart = await Cart.updateOne(reference, { $inc: { p_qty: 1 } })
-        if(updatedCart.nModified === 0) {
-            res.json({
-                'update': 'failure'
-            })
-            console.log("Log: Product not found in cart")
+    const qty_change = req.body.qty_change;
+    const cart = await Cart.findOne(reference)
+    if (cart) {
+        const updatedCart = await Cart.updateOne(reference, { $inc: { p_qty: qty_change } })
+        if (cart.p_qty == 1 && qty_change == -1) {
+            const deletedCart = await Cart.deleteOne(reference)
+            console.log("Log: Product deleted from cart")
         }
         res.json({
             'update': 'success',
@@ -82,54 +81,28 @@ const update_to_cart = async (req, res) => {
 
 const delete_from_cart = async (req, res) => {
     const reference = {
-        u_name: req.body.u_name,
-        p_id: req.body.p_id,
+        u_name: req.u_name,
+        p_id: req.query.p_id,
     }
-    // check if product with the user already exists in cart
-    const cart = await Cart.find(reference)
-    // if product already exists, update the quantity else delete the product
-    if (cart.length >= 1) {
-        // store the value of p_qty in a variable
-        const p_qty = cart[0].p_qty
-        if(p_qty == 1)  {
-            const deletedCart = await Cart.deleteOne(reference)
-            if(deletedCart.deletedCount === 0) {
-                res.json({
-                    'delete': 'failure'
-                })
-                console.log("Log: Product not found in cart")
-            }
-            res.json({
-                'delete': 'success',
-                'cart': deletedCart
-            })
-            console.log("Log: Product deleted from cart")
-        } else {
-            const updatedCart = await Cart.updateOne(reference, { $inc: { p_qty: -1 } })
-            if(updatedCart.nModified === 0) {
-                res.json({
-                    'update': 'failure'
-                })
-                console.log("Log: Product not found in cart")
-            }
-            res.json({
-                'delete': 'success',
-                'cart': updatedCart
-            })
-            console.log("Log: Product quantity updated in cart")
-        }
-    } else {
+    console.log(reference)
+    const deletedCart = await Cart.deleteOne(reference)
+    console.log(deletedCart)
+    if(deletedCart.deletedCount === 0) {
         res.json({
             'delete': 'failure'
         })
         console.log("Log: Product not found in cart")
     }
+    res.json({
+        'delete': 'success',
+        'cart': deletedCart
+    })
+    console.log("Log: Product deleted from cart")
 }
-
 
 module.exports = {
     fetch_cart,
     insert_to_cart,
-    update_to_cart,
+    update_cart,
     delete_from_cart
 }

@@ -1,5 +1,6 @@
 //import express module
 const express = require('express')
+
 //create router instance
 const router = express.Router()
 
@@ -12,8 +13,8 @@ router.post('/login', userApi.loginUser)
 //register user
 router.post('/register', userApi.registerUser)
 
-//authenticate user
-router.post('/auth', userApi.AuthenticateUser)
+//auth user
+router.post('/auth', userApi.authenticateUser)
 
 //export router
 module.exports = router

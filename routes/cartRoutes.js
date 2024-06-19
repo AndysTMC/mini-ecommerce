@@ -10,7 +10,7 @@ const cartApi = require('../apis/cartApis')
 router.post('/insert', cartApi.insert_to_cart)
 
 //update to cart
-router.put('/update', cartApi.update_to_cart)
+router.put('/update', cartApi.update_cart)
 
 //delete from cart
 router.delete('/delete', cartApi.delete_from_cart)
