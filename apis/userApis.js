@@ -25,7 +25,8 @@ const loginUser = async (req, res) => {
             const options = {
                 expires: new Date(Date.now() + process.env.COOKIE_EXPIRE_LENGTH * 24 * 60 * 60 * 1000),
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production'  // Set secure flag to true in production
+                secure: process.env.NODE_ENV === 'production',
+                sameSite:'none',
             };
             console.log("Options Set")
             res.status(200).cookie('token', jwt_token, options).json({
