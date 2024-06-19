@@ -27,6 +27,7 @@ const loginUser = async (req, res) => {
                 httpOnly: true,
                 secure: true,
                 sameSite:'none',
+                domain: 'https://mini-ecom-react-app.netlify.app'
             };
             console.log("Options Set")
             res.status(200).cookie('token', jwt_token, options).json({
