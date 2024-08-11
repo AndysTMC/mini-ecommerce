@@ -58,6 +58,7 @@ const registerUser = async (req, res) => {
                 'reason': 'User already exists'
             })
             console.log("Log: User already exists")
+            return;
         }
         const savedUser = await user.save()
         res.send({
