@@ -15,7 +15,7 @@ app.use(bodyparser.urlencoded({ extended: false }))
 // Set cookie parser
 app.use(cookieParser())
 
-require('dotenv')
+require('dotenv').config({path: './.env'})
 // Enable CORS -> Cross Origine Resource Sharing -> communication among various ports
 // origins are in .env, use them
 

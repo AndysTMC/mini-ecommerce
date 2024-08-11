@@ -24,10 +24,7 @@ const loginUser = async (req, res) => {
             console.log(jwt_token)
             const options = {
                 expires: new Date(Date.now() + process.env.COOKIE_EXPIRE_LENGTH * 24 * 60 * 60 * 1000),
-                httpOnly: true,
-                secure: true,
-                sameSite:'none',
-                domain: 'https://mini-ecom-react-app.netlify.app'
+                httpOnly: true
             };
             console.log("Options Set")
             res.status(200).cookie('token', jwt_token, options).json({
