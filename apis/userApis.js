@@ -60,7 +60,6 @@ const registerUser = async (req, res) => {
             u_addr: req.body.u_addr,
             u_contact: req.body.u_contact
         })
-        console.log(user)
         const savedUser = await user.save();
         res.send({
             'register': 'success',
