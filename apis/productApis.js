@@ -18,7 +18,7 @@ const fetch_product = async (req, res) => {
 
 const fetch_all_products = async (req, res) => {
     try {
-        const products = await Product.find()
+        const products = await Product.find();
         res.json({
             'fetch_all' : 'success',
             'products' : products
@@ -68,7 +68,6 @@ const update_product = async (req, res) => {
             { p_id: p_id },
             { $set: newData }
         );
-        
         if (updateProduct.modifiedCount !== 0) {
             res.send({ 'update': 'success' });
             console.log("Log: Product updated")

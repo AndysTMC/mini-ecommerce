@@ -18,15 +18,9 @@ const loginUser = async (req, res) => {
             let jwt_token = jwt.sign({u_name: user.u_name}, process.env.JWT_SECRET_KEY, {
                 expiresIn: process.env.JWT_EXPIRE_LENGTH
             })
-            console.log(jwt.verify(jwt_token, process.env.JWT_SECRET_KEY))
-            console.log(process.env.JWT_EXPIRE_LENGTH)
-            console.log("Token Generated")
-            console.log(jwt_token)
             const options = {
                 expires: new Date(Date.now() + process.env.COOKIE_EXPIRE_LENGTH * 24 * 60 * 60 * 1000),
-                httpOnly: true
             };
-            console.log("Options Set")
             res.status(200).cookie('token', jwt_token, options).json({
                 'login' : 'success',
                 'u_name': user.u_name,
@@ -38,7 +32,6 @@ const loginUser = async (req, res) => {
     } catch (error) {
         res.json({ 'login': 'error', 'error': error })
         console.log("Log: Error occured in data fetching")
-        console.log(error)
     }
 }
 

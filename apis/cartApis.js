@@ -84,14 +84,13 @@ const delete_from_cart = async (req, res) => {
         u_name: req.u_name,
         p_id: req.query.p_id,
     }
-    console.log(reference)
     const deletedCart = await Cart.deleteOne(reference)
-    console.log(deletedCart)
     if(deletedCart.deletedCount === 0) {
         res.json({
             'delete': 'failure'
         })
         console.log("Log: Product not found in cart")
+        return;
     }
     res.json({
         'delete': 'success',
