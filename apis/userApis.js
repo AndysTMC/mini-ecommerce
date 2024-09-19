@@ -43,15 +43,8 @@ const loginUser = async (req, res) => {
 }
 
 const registerUser = async (req, res) => {
-    const user = new User({
-        u_name: req.body.u_name,
-        u_pwd: req.body.u_pwd,
-        u_email: req.body.u_email,
-        u_addr: req.body.u_addr,
-        u_contact: req.body.u_contact
-    })
     try {
-        const pastUser = await User.find({u_name: user.u_name})
+        const pastUser = await User.find({u_name: req.body.u_name })
         if (pastUser.length > 0) {
             res.json({
                 'register': 'failure',
@@ -60,7 +53,15 @@ const registerUser = async (req, res) => {
             console.log("Log: User already exists")
             return;
         }
-        const savedUser = await user.save()
+        const user = new User({
+            u_name: req.body.u_name,
+            u_pwd: req.body.u_pwd,
+            u_email: req.body.u_email,
+            u_addr: req.body.u_addr,
+            u_contact: req.body.u_contact
+        })
+        console.log(user)
+        const savedUser = await user.save();
         res.send({
             'register': 'success',
             'user': savedUser
