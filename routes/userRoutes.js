@@ -16,5 +16,8 @@ router.post('/register', userApi.registerUser)
 //auth user
 router.post('/auth', userApi.authenticateUser)
 
+//logout user
+router.get('/logout', userApi.logoutUser)
+
 //export router
 module.exports = router
