@@ -18,8 +18,11 @@ const loginUser = async (req, res) => {
             let jwt_token = jwt.sign({u_name: user.u_name}, process.env.JWT_SECRET_KEY, {
                 expiresIn: process.env.JWT_EXPIRE_LENGTH
             })
+            // same site none
             const options = {
                 expires: new Date(Date.now() + process.env.COOKIE_EXPIRE_LENGTH * 24 * 60 * 60 * 1000),
+                secure: false,
+                sameSite: 'none'
             };
             res.status(200).cookie('token', jwt_token, options).json({
                 'login' : 'success',
