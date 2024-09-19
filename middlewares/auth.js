@@ -5,10 +5,6 @@ const asyncErrorHandler = require('./asyncErrorHandler');
 
 module.exports.isAuthenticatedUser = asyncErrorHandler(async (req, res, next) => {
     const { token } = req.cookies
-    console.log(req.cookies)
-    console.log(req)
-    console.log(token)
-    console.log("Token found in Cookies")
 
     if (!token) {
         return next(new ErrorHandler("Please Login to Access", 401))

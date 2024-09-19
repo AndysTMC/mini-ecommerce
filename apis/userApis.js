@@ -21,7 +21,7 @@ const loginUser = async (req, res) => {
             // same site none
             const options = {
                 expires: new Date(Date.now() + process.env.COOKIE_EXPIRE_LENGTH * 24 * 60 * 60 * 1000),
-                secure: false,
+                secure: true,
                 sameSite: 'none'
             };
             res.status(200).cookie('token', jwt_token, options).json({
